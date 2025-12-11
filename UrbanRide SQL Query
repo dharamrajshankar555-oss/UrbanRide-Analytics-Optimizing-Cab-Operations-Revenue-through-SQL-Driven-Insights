@@ -1,0 +1,203 @@
+create database cab_booking ;
+use cab_booking;
+
+
+
+CREATE TABLE Customers (
+    CustomerID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    CustomerName VARCHAR(100) NOT NULL,
+    JoinDate DATE NOT NULL);
+    
+INSERT INTO Customers (CustomerName, JoinDate) VALUES
+('Rohan Sharma', '2024-01-15'),('Priya Patel', '2024-02-20'),('Aditya Singh', '2024-03-10'),('Ananya Gupta', '2024-04-05'),('Vikram Mehta', '2024-05-22'),
+('Sneha Reddy', '2024-06-30'),('Arjun Kumar', '2024-07-11'),('Isha Desai', '2024-08-19'),('Kabir Joshi', '2024-09-02'),('Diya Verma', '2024-10-01');
+select * from Customers;
+
+DROP TABLE Customers;
+
+
+CREATE TABLE Drivers (
+    DriverID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    DriverName VARCHAR(100) NOT NULL);
+    
+INSERT INTO Drivers (DriverName) VALUES
+('Sanjay Yadav'),('Manoj Kumar'),('Ravi Verma'),('Amit Patel'),('Sunil Gupta'),('Deepak Singh'),('Rajesh Sharma'),('Anil Mehta'),
+('Prakash Desai'),('Vinod Reddy');
+select * from Drivers;
+DROP TABLE Drivers;
+
+
+
+CREATE TABLE Cabs (
+    CabID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    CabType VARCHAR(50), 
+    RegistrationNumber VARCHAR(20) UNIQUE NOT NULL );
+    
+    INSERT INTO Cabs (CabType, RegistrationNumber) VALUES
+('Sedan', 'MH01AB1234'),('SUV', 'MH02CD5678'),('Sedan', 'MH01EF9012'),('Hatchback', 'MH03GH3456'),('SUV', 'MH04IJ7890'),('Sedan', 'MH02KL1234'),
+('SUV', 'MH01MN5678'),('Sedan', 'MH03OP9012'),('Hatchback', 'MH04QR3456'),('Sedan', 'MH01ST7890');
+select * from Cabs ;
+DROP TABLE Cabs;
+
+
+
+CREATE TABLE Bookings (
+    BookingID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT UNSIGNED NOT NULL,
+    DriverID INT UNSIGNED,
+    CabID INT UNSIGNED,
+    BookingTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PickupLocation VARCHAR(255) NOT NULL,
+    DropoffLocation VARCHAR(255) NOT NULL,
+    BookingStatus VARCHAR(50) NOT NULL,
+    Fare DECIMAL(10, 2),
+
+	FOREIGN KEY(CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY(DriverID) REFERENCES Drivers(DriverID),
+    FOREIGN KEY(CabID) REFERENCES Cabs(CabID));
+    
+    INSERT INTO Bookings (CustomerID, DriverID, CabID, BookingTime, PickupLocation, DropoffLocation, BookingStatus, Fare) VALUES
+(1, 1, 1, '2025-10-01 09:30:00', 'Andheri', 'Bandra', 'Completed', 350.50),
+(2, 2, 2, '2025-10-01 11:00:00', 'Dadar', 'Churchgate', 'Completed', 400.00),
+(3, 3, 3, '2025-10-02 14:00:00', 'Juhu', 'Mumbai Airport', 'Completed', 550.75),
+(4, 4, 4, '2025-10-02 18:45:00', 'Goregaon', 'Malad', 'Canceled', NULL),
+(5, 5, 5, '2025-10-03 08:00:00', 'Thane', 'Powai', 'Completed', 600.00),
+(1, 6, 6, '2025-10-03 12:30:00', 'Bandra', 'Andheri', 'Completed', 375.25),
+(6, 7, 7, '2025-10-04 17:20:00', 'Colaba', 'Marine Drive', 'Completed', 250.00),
+(7, 8, 8, '2025-10-05 19:00:00', 'Chembur', 'Ghatkopar', 'Canceled', NULL),
+(8, 9, 9, '2025-10-06 10:15:00', 'Vashi', 'Nerul', 'Completed', 300.50),
+(9, 10, 10, '2025-10-07 11:45:00', 'Kandivali', 'Borivali', 'Completed', 200.00),
+(2, 1, 2, '2025-10-08 16:00:00', 'Powai', 'Mumbai Airport', 'Completed', 450.00),
+(10, 3, 1, '2025-10-09 09:00:00', 'Worli', 'Lower Parel', 'Completed', 180.75),
+(5, 4, 5, '2025-10-09 13:20:00', 'Bandra Kurla Complex', 'Dadar', 'Canceled', NULL),
+(3, 7, 8, '2025-10-10 08:55:00', 'Churchgate', 'Colaba', 'Ongoing', NULL),
+(4, 2, 4, '2025-10-10 09:10:00', 'Malad', 'Andheri', 'Ongoing', NULL);
+select * from Bookings;
+
+
+
+CREATE TABLE TripDetails (
+    TripID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    BookingID INT UNSIGNED NOT NULL, 
+    TripStartTime TIMESTAMP, 
+    TripEndTime TIMESTAMP, 
+    Distance DECIMAL(10, 2),
+
+FOREIGN KEY(BookingID) REFERENCES Bookings(BookingID));
+
+INSERT INTO TripDetails (BookingID, TripStartTime, TripEndTime, Distance) VALUES
+(1, '2025-10-01 09:35:00', '2025-10-01 10:15:00', 15.5),(2, '2025-10-01 11:05:00', '2025-10-01 11:55:00', 20.0),
+(3, '2025-10-02 14:08:00', '2025-10-02 14:40:00', 8.2),(5, '2025-10-03 08:10:00', '2025-10-03 09:05:00', 25.0),
+(6, '2025-10-03 12:33:00', '2025-10-03 13:10:00', 16.0),(7, '2025-10-04 17:25:00', '2025-10-04 17:45:00', 5.5),
+(9, '2025-10-06 10:20:00', '2025-10-06 10:45:00', 10.2),(10, '2025-10-07 11:50:00', '2025-10-07 12:05:00', 7.8),
+(11, '2025-10-08 16:05:00', '2025-10-08 16:50:00', 18.5),(12, '2025-10-09 09:05:00', '2025-10-09 09:25:00', 6.0);
+select * from TripDetails;
+
+
+CREATE TABLE Feedback (
+    FeedbackID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    BookingID INT UNSIGNED NOT NULL,
+    DriverID INT UNSIGNED NOT NULL,
+    CustomerID INT UNSIGNED NOT NULL,
+    Rating INT CHECK (Rating >= 1 AND Rating <= 5),
+    Comments TEXT,
+    FeedbackDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+
+	FOREIGN KEY (BookingID) REFERENCES Bookings(BookingID),
+	FOREIGN KEY (DriverID) REFERENCES Drivers(DriverID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+    
+    
+INSERT INTO Feedback (BookingID, DriverID, CustomerID, Rating, Comments, FeedbackDate) VALUES
+(1, 1, 1, 5, 'Great driver, very professional and on time.', '2025-10-01'),
+(2, 2, 2, 4, 'Car was clean and the ride was smooth.', '2025-10-01'),
+(3, 3, 3, 2, 'Driver took a longer route than necessary and seemed lost.', '2025-10-02'),
+(5, 5, 5, 5, 'Excellent service! Very friendly and a safe driver.', '2025-10-03'),
+(6, 6, 1, 2, 'Driver was late for pickup by 15 minutes. Not happy.', '2025-10-08'),
+(7, 7, 6,  2, 'Took a much longer route than necessary. I think he got lost.', '2025-10-02'),
+(9, 9, 8, 3, 'The ride was okay, but the music was way too loud.', '2025-10-09'),
+(10, 10, 9, 4, 'No issues, reached my destination on time.', '2025-10-07'),
+(11, 1, 2, 2, 'Driver was late for pickup by 15 minutes. Not happy.', '2025-10-08'),
+(12, 3, 10, 5, 'Perfect trip, highly recommend this driver.', '2025-10-09');
+
+DROP TABLE Feedback;
+select * from Feedback;
+
+
+-- 1.Identify customers who have completed the most bookings 
+
+SELECT c.CustomerID,c.CustomerName, COUNT(b.BookingID) AS CompletedBookings FROM Customers c
+JOIN Bookings b ON c.CustomerID = b.CustomerID
+WHERE b.BookingStatus = 'Completed'
+GROUP BY c.CustomerID, c.CustomerName ORDER BY CompletedBookings DESC LIMIT 5; 
+
+
+-- 3. Find the busiest day of the week for bookings.
+SELECT DAYNAME(BookingTime) AS DayOfWeek, COUNT(*) AS NumberOfBookings 
+FROM Bookings GROUP BY DayOfWeek ORDER BY NumberOfBookings DESC; 
+    
+    
+-- 4.Find the top 5 drivers who have completed the longest trips by distance 
+SELECT d.DriverID, d.DriverName, SUM(td.Distance) AS TotalDistanceCovered FROM Drivers d
+JOIN Bookings b ON d.DriverID = b.DriverID
+JOIN TripDetails td ON b.BookingID = td.BookingID
+WHERE b.BookingStatus = 'Completed'
+GROUP BY d.DriverID, d.DriverName ORDER BY TotalDistanceCovered DESC LIMIT 5;
+
+-- 5.Calculate the total revenue in the last 6 months 
+SELECT DATE_FORMAT(BookingTime, '%Y-%m') AS RevenueMonth, SUM(Fare) AS TotalRevenue FROM Bookings
+WHERE BookingStatus = 'Completed' AND BookingTime >= (CURDATE() - INTERVAL 6 MONTH)
+GROUP BY RevenueMonth ORDER BY RevenueMonth;
+
+-- 6.Identify the top 3 most frequently traveled routes 
+SELECT PickupLocation, DropoffLocation, COUNT(*) AS NumberOfTrips FROM Bookings
+WHERE BookingStatus = 'Completed' GROUP BY PickupLocation, DropoffLocation
+ORDER BY NumberOfTrips DESC LIMIT 3;
+
+
+
+-- 7. Analyze the average waiting time (difference between booking time and trip start time) for different pickup locations.
+
+SELECT b.PickupLocation, ROUND(AVG(TIMESTAMPDIFF(MINUTE, b.BookingTime, td.TripStartTime)), 2) AS AverageWaitTime_Minutes, 
+COUNT(b.BookingID) AS NumberOfTrips
+FROM Bookings b
+JOIN TripDetails td 
+ON b.BookingID = td.BookingID
+GROUP BY b.PickupLocation ORDER BY AverageWaitTime_Minutes DESC;
+
+
+-- 8. Find out whether shorter trips (low-distance) contribute significantly to revenue.
+
+WITH TripAnalysis AS(
+SELECT b.Fare,
+CASE WHEN td.Distance <= 5 THEN 'Short Trip (<= 5 km)'
+WHEN td.Distance > 5 AND td.Distance <= 15 THEN 'Medium Trip (5-15 km)' ELSE 'Long Trip (> 15 km)' END AS TripCategory FROM Bookings b
+JOIN TripDetails td ON b.BookingID = td.BookingID
+WHERE b.BookingStatus = 'Completed')
+SELECT TripCategory, COUNT(*) AS NumberOfTrips, SUM(Fare) AS TotalRevenue, ROUND(AVG(Fare), 2) AS AverageFare FROM TripAnalysis
+GROUP BY TripCategory ORDER BY TripCategory;
+
+
+-- 9.Compare the revenue generated from 'Sedan' and 'SUV' cabs
+
+SELECT c.CabType, SUM(b.Fare) AS TotalRevenue, 
+COUNT(b.BookingID) AS NumberOfTrips, ROUND(AVG(b.Fare), 2) AS AverageFarePerTrip FROM Cabs c
+JOIN Bookings b ON c.CabID = b.CabID
+WHERE b.BookingStatus = 'Completed' AND c.CabType IN ('Sedan', 'SUV')
+GROUP BY c.CabType ORDER BY TotalRevenue DESC; 
+
+
+
+ -- 10. Analyze whether weekend bookings differ significantly from weekday bookings.
+ 
+WITH BookingAnalysis AS (
+SELECT Fare,
+CASE WHEN DAYOFWEEK(BookingTime) IN (1, 7) THEN 'Weekend' ELSE 'Weekday' END AS DayType
+FROM Bookings 
+WHERE BookingStatus = 'Completed')
+
+SELECT DayType,
+COUNT(*) AS TotalBookings, SUM(Fare) AS TotalRevenue, ROUND(AVG(Fare), 2) AS AverageFare
+FROM BookingAnalysis GROUP BY DayType;
+ 
