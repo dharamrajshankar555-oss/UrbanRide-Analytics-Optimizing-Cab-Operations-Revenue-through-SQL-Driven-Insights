@@ -62,4 +62,4 @@ The SQL script is divided into two main parts:
 * Create a stored procedure to automatically calculate fares based on distance.
 
 ---
-**Author:** [Your Name]
+
